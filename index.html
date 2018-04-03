@@ -1,1 +1,200 @@
-111222
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=0" />
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="0" />
+    <title>loading ...</title>
+    <link rel="stylesheet" href="//cdn.bootcss.com/bootstrap/3.3.5/css/bootstrap.min.css">
+    <script src="//cdn.bootcss.com/jquery/1.11.1/jquery.min.js"></script>
+    <script>
+        function getHash(key) {
+            var data = {};
+            $.each(location.hash.substr(1).split('&'), function(i, e){
+                var stmp = e.split('=');
+                if (stmp[0] != '') data[stmp[0]] = stmp[1];
+            });
+            if (key === undefined || key === null) return data;
+            return (data[key] !== undefined) ? data[key] : '';
+        }
+
+        function setHash(data) {
+            var hash = '';
+            $.each(data, function(k, v) {
+                hash += k + '=' + v + '&';
+            });
+
+            hash = hash.substr(0, hash.length - 1);
+            location.hash = hash;
+        }
+
+        var pre_music_url = "http://appsolution.b0.upaiyun.com/bible365/";
+
+        var music_url = "";
+        var audio = null;
+        var timestamp = 0;
+
+        function init() {
+
+            var lang = getHash('lang');
+            lang = (lang == '') ? 'kr' : lang;
+
+            var apiUrl = 'http://bible365.m-center.cn/bible365api/api.php?r=bible365&lang=' + lang;
+            $.get(apiUrl, function (data) {
+
+                if (data.code != '200') {
+                    alert('导入失败');
+                    return;
+                }
+
+                var info = data.data;
+                console.log(info);
+
+                music_url = pre_music_url + lang + "/" + "2017-" + info.date.substr(5) + ".mp3";
+                $("#bgsound").remove()
+                audio = null;
+                timestamp = 0;
+
+
+                if (info.lang == 'kr') {
+
+                    $("#title").html('[성경365]');
+                    $('title').html('[성경365] ' +  info.title);
+
+                    $("#changeLang").attr('href', '#lang=cn');
+                    $("#changeLang > span").html('언어변경 (中文)');
+
+                    var tip  = "<span class=\"glyphicon glyphicon-ok\" aria-hidden=\"true\"></span> 오늘 말씀가운데 마음에 와 닿는 한 구절을 찾아 종일 묵상하고 암기해 봅시다. ";
+                    tip += "<br /><br />";
+                    tip += "<span class=\"glyphicon glyphicon-ok\" aria-hidden=\"true\"></span> 본문내용에서 오늘의 핵심구절을 찾아 정성껏 필사하세요.";
+                    tip += "<br /><br />";
+                    tip += "<span class=\"glyphicon glyphicon-ok\" aria-hidden=\"true\"></span> 감사는 평안의 안내자입니다. 오늘의 감사 내용을 적어보세요.";
+                    $("#tip").html(tip);
+
+                } else {
+
+                    $("#title").html('[圣经365]');
+                    $('title').html('[圣经365] ' +  info.title);
+
+                    $("#changeLang").attr('href', '#lang=kr');
+                    $("#changeLang > span").html('切换语言 (조선어)');
+
+                    var tip  = "<span class=\"glyphicon glyphicon-ok\" aria-hidden=\"true\"></span> 在今天所读的话语中选择一节最蒙恩的经文来默想并背诵。";
+                    tip += "<br /><br />";
+                    tip += "<span class=\"glyphicon glyphicon-ok\" aria-hidden=\"true\"></span> 在本文中找到今天的核心经文，工整的抄写一遍。";
+                    tip += "<br /><br />";
+                    tip += "<span class=\"glyphicon glyphicon-ok\" aria-hidden=\"true\"></span> 感恩是平安的伴侣。请写出今天的感恩。";
+                    $("#tip").html(tip);
+                }
+
+                var tMatch = info.title.match(/(.*)\((.*)\)/);
+                if (tMatch !== null) {
+                    $("#title1").html(tMatch[1]);
+                    $("#title2").html(tMatch[2]);
+                }
+
+                var tmp = info.contents;
+                tmp = tmp.replace(/\\"/g, '\"');
+                tmp = tmp.replace(/\\'/g, "'");
+                var contents = tmp.split("\n");
+
+                var sContents = '';
+                $.each(contents, function (i, e) {
+                    sContents += '<tr>';
+                    sContents += '<td>';
+                    var match = e.match(/([0-9]+)(.*)/);
+                    if (match !== null) {
+                        sContents += '<span class="label label-info">' + match[1] + '</span> ';
+                        sContents += match[2];
+                    } else {
+                        sContents += e;
+                    }
+                    sContents += '</td>';
+                    sContents += '</tr>';
+                });
+
+                $('#contents').html(sContents);
+
+            }, 'json')
+
+        }
+        init();
+
+        $(function(){
+            $(window).on("hashchange", function() {
+                init()
+            });
+        });
+    </script>
+
+    <script>
+
+        function createAutido() {
+            audio = document.createElement('audio');
+            audio.id = 'bgsound';
+            audio.src = music_url;
+            audio.loop = 'loop';
+            document.body.appendChild(audio);
+        }
+        function switchsound() {
+            if ($('#bgsound').attr('src') === undefined) {
+                createAutido();
+            }
+
+            if (audio.paused) {
+                audio.play();
+            } else if (new Date().getTime() > timestamp + 1000) {
+                audio.pause();
+            }
+        }
+    </script>
+</head>
+<body>
+<br />
+<div class="container">
+    <div class="header clearfix">
+        <nav>
+            <ul class="nav nav-pills pull-right">
+                <li role="presentation" class="active">
+                    <a id="changeLang" href="#lang=kr">
+                        <span>切换语言</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+        <h3 id="title" class="text-muted">Bible365</h3>
+    </div>
+
+    <div class="jumbotron" style="margin-top: 5px;" onclick="switchsound();">
+        <h2 class="text-center" id="title1">loading</h2>
+        <p class="text-center">
+            <span id="title2">loading</span>
+            <span style="color:red;" class="glyphicon glyphicon-headphones" aria-hidden="true"> </span>
+        </p>
+    </div>
+
+    <div class="section section-on section-border">
+        <table class="table table-striped1">
+            <tbody style="color: #3e3e3e" id="contents">
+            </tbody>
+        </table>
+    </div>
+
+    <div class="section section-on section-border">
+        <div class="panel panel-info">
+            <div class="panel-heading">
+                <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+                <strong>Tips</strong>
+            </div>
+            <div class="panel-body">
+                <p id="tip" style="color:#31708f;"></p>
+            </div>
+        </div>
+    </div>
+    <br />
+</div>
+</body>
+</html>
