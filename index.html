@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="//cdn.bootcss.com/bootstrap/3.3.5/css/bootstrap.min.css">
     <script src="//cdn.bootcss.com/jquery/1.11.1/jquery.min.js"></script>
     <script>
+
         function getHash(key) {
             var data = {};
             $.each(location.hash.substr(1).split('&'), function(i, e){
@@ -32,10 +33,29 @@
         }
 
         var pre_music_url = "http://appsolution.b0.upaiyun.com/bible365/";
-
         var music_url = "";
         var audio = null;
         var timestamp = 0;
+
+        function createAutido() {
+            audio = document.createElement('audio');
+            audio.id = 'bgsound';
+            audio.src = music_url;
+            audio.loop = 'loop';
+            document.body.appendChild(audio);
+        }
+
+        function switchsound() {
+            if ($('#bgsound').attr('src') === undefined) {
+                createAutido();
+            }
+
+            if (audio.paused) {
+                audio.play();
+            } else if (new Date().getTime() > timestamp + 1000) {
+                audio.pause();
+            }
+        }
 
         function init() {
 
@@ -45,7 +65,7 @@
             var apiUrl = 'http://bible365.m-center.cn/bible365api/api.php?r=bible365&lang=' + lang;
             $.get(apiUrl, function (data) {
 
-                if (data.code != '200') {
+                if (data === undefined || data.code != '200') {
                     alert('导入失败');
                     return;
                 }
@@ -131,28 +151,6 @@
                 init()
             });
         });
-    </script>
-
-    <script>
-
-        function createAutido() {
-            audio = document.createElement('audio');
-            audio.id = 'bgsound';
-            audio.src = music_url;
-            audio.loop = 'loop';
-            document.body.appendChild(audio);
-        }
-        function switchsound() {
-            if ($('#bgsound').attr('src') === undefined) {
-                createAutido();
-            }
-
-            if (audio.paused) {
-                audio.play();
-            } else if (new Date().getTime() > timestamp + 1000) {
-                audio.pause();
-            }
-        }
     </script>
 </head>
 <body style="display: none;">
