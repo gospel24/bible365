@@ -12,21 +12,46 @@
     <script src="//cdn.bootcss.com/jquery/1.11.1/jquery.min.js"></script>
     <style type="text/css">
         #changeLang {
+            overflow: hidden;
             position: absolute;
-            top: 12px;
+            top: 20px;
             right: 18px;
 
-            width: 150px;
-            height: 37px;
+            width: 80px;
+            height: 30px;
 
             text-align: center;
-            line-height: 37px;
+            line-height: 30px;
 
             color: #ffffff;
-            font-size: 16px;
+            font-size: 13px;
 
             border-radius: 5px;
             background: #337ab7;
+        }
+
+        #contents {
+            margin: 0 15px 20px 15px;
+        }
+
+        #contents > p {
+            margin-bottom: 10px;
+            padding-bottom: 5px;
+            border-bottom: #dddddd solid 1px;
+        }
+
+        .num {
+            background-color: #5bc0de;
+            display: inline;
+            padding: .2em .6em .3em;
+            font-size: 75%;
+            font-weight: 700;
+            line-height: 1;
+            color: #fff;
+            text-align: center;
+            white-space: nowrap;
+            vertical-align: baseline;
+            border-radius: .25em;
         }
     </style>
 </head>
@@ -47,12 +72,7 @@
         </p>
     </div>
 
-    <div class="section section-on section-border">
-        <table class="table table-striped1">
-            <tbody style="color: #3e3e3e" id="contents">
-            </tbody>
-        </table>
-    </div>
+    <div id="contents"></div>
 
     <div class="section section-on section-border">
         <div class="panel panel-info">
@@ -138,11 +158,11 @@
 
             if (info.lang == 'kr') {
 
-                $("#title").html('[성경365]');
+                $("#title").html('성경365');
                 $('title').html('[성경365] ' +  info.title);
 
                 $("#changeLang").attr('href', '#lang=cn');
-                $("#changeLang > span").html('언어변경 (中文)');
+                $("#changeLang > span").html('언어변경');
 
                 var tip  = "<span class=\"glyphicon glyphicon-ok\" aria-hidden=\"true\"></span> 오늘 말씀가운데 마음에 와 닿는 한 구절을 찾아 종일 묵상하고 암기해 봅시다. ";
                 tip += "<br /><br />";
@@ -153,11 +173,11 @@
 
             } else {
 
-                $("#title").html('[圣经365]');
+                $("#title").html('圣经365');
                 $('title').html('[圣经365] ' +  info.title);
 
                 $("#changeLang").attr('href', '#lang=kr');
-                $("#changeLang > span").html('切换语言 (조선어)');
+                $("#changeLang > span").html('切换语言');
 
                 var tip  = "<span class=\"glyphicon glyphicon-ok\" aria-hidden=\"true\"></span> 在今天所读的话语中选择一节最蒙恩的经文来默想并背诵。";
                 tip += "<br /><br />";
@@ -180,17 +200,15 @@
 
             var sContents = '';
             $.each(contents, function (i, e) {
-                sContents += '<tr>';
-                sContents += '<td>';
+                sContents += '<p class="row">';
                 var match = e.match(/([0-9]+)(.*)/);
                 if (match !== null) {
-                    sContents += '<span class="label label-info">' + match[1] + '</span> ';
+                    sContents += '<span class="num">' + match[1] + '</span> ';
                     sContents += match[2];
                 } else {
                     sContents += e;
                 }
-                sContents += '</td>';
-                sContents += '</tr>';
+                sContents += '</p>';
             });
 
             $('#contents').html(sContents);
