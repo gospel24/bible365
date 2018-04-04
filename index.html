@@ -143,9 +143,11 @@
             }, 'json')
 
         }
-        init();
 
         $(function(){
+
+            init();
+
             $(window).on("hashchange", function() {
                 $('body').hide();
                 init()
