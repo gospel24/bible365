@@ -11,6 +11,16 @@
     <link rel="stylesheet" href="//cdn.bootcss.com/bootstrap/3.3.5/css/bootstrap.min.css">
     <script src="//cdn.bootcss.com/jquery/1.11.1/jquery.min.js"></script>
     <style type="text/css">
+
+        #title {
+            font-size: 25px;
+            color: #777777;
+        }
+
+        #title2 {
+            font-size: 15px;
+            color: #CC0000;
+        }
         #changeLang {
             overflow: hidden;
             position: absolute;
@@ -55,40 +65,39 @@
             vertical-align: baseline;
             border-radius: .25em;
         }
+
+        #tip {
+            color:#31708f;
+        }
     </style>
 </head>
 <body style="display: none;">
 <div class="container">
     <div class="header clearfix">
-        <a id="changeLang" href="#lang=kr">
-            <span>changeLang</span>
-        </a>
-        <h3 id="title" class="text-muted">Bible365</h3>
+        <h1 id="title">Bible365</h1>
+        <a id="changeLang" href="#lang=kr">changeLang</a>
     </div>
 
     <div class="jumbotron" style="margin-top: 5px;" onclick="switchsound();">
-        <h2 class="text-center" id="title1">loading</h2>
-        <p class="text-center">
-            <span id="title2">loading</span>
-            <span style="color:red;" class="glyphicon glyphicon-headphones" aria-hidden="true"> </span>
-        </p>
+        <h2 id="title1" class="text-center">loading</h2>
+        <p id="title2" class="text-center">loading</p>
     </div>
 
-    <div id="contents"></div>
+    <div id="contents">
+        loading
+    </div>
 
     <div class="section section-on section-border">
         <div class="panel panel-info">
             <div class="panel-heading">
-                <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+                <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"> </span>
                 <strong>Tips</strong>
             </div>
-            <div class="panel-body">
-                <p id="tip" style="color:#31708f;"></p>
-            </div>
+            <div class="panel-body"><p id="tip"></p></div>
         </div>
     </div>
-    <br />
 </div>
+
 <script>
 
     function getHash(key) {
@@ -164,7 +173,7 @@
                 $('title').html('[성경365] ' +  info.title);
 
                 $("#changeLang").attr('href', '#lang=cn');
-                $("#changeLang > span").html('언어변경');
+                $("#changeLang").html('언어변경');
 
                 var tip  = "<span class=\"glyphicon glyphicon-ok\" aria-hidden=\"true\"></span> 오늘 말씀가운데 마음에 와 닿는 한 구절을 찾아 종일 묵상하고 암기해 봅시다. ";
                 tip += "<br /><br />";
@@ -179,7 +188,7 @@
                 $('title').html('[圣经365] ' +  info.title);
 
                 $("#changeLang").attr('href', '#lang=kr');
-                $("#changeLang > span").html('切换语言');
+                $("#changeLang").html('切换语言');
 
                 var tip  = "<span class=\"glyphicon glyphicon-ok\" aria-hidden=\"true\"></span> 在今天所读的话语中选择一节最蒙恩的经文来默想并背诵。";
                 tip += "<br /><br />";
